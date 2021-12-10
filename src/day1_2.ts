@@ -15,4 +15,4 @@ const result = n.reduce((prev, _, ind) => {
   return prev;
 }, 0);
 
-console.log(`Answer: ${result}`);
+console.log(`Day 1.2: ${result}`);

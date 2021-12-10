@@ -10,4 +10,4 @@ const result = lines.reduce((prev, curr, ind) => {
   return prev;
 }, 0);
 
-console.log(`Answer: ${result}`);
+console.log(`Day 1.1: ${result}`);

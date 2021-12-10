@@ -1,3 +1,4 @@
-day1:
+run:
+	rm -f build/*
 	yarn tsc
-	node build/day1.js
+	ls build/*.js | xargs -n1 node 
