@@ -84,10 +84,16 @@ while (lines.length > 0) {
 }
 
 for (let move of moves) {
+  const wonBefore = boards.map((board) => isComplete(board));
   boards = boards.map((board) => mark(board, move));
-  const won = boards.filter((board) => isComplete(board));
-  if (won.length > 0) {
-    console.log(`Day 4.1: ${calculateScore(won[0], move)}`);
+
+  const won = boards.map((board) => isComplete(board));
+  if (won.filter((w) => !!w).length === boards.length) {
+    const firstNewWinner = won.findIndex((val, ind) => val !== wonBefore[ind]);
+    if (firstNewWinner === -1) {
+      throw new Error("Logic error");
+    }
+    console.log(`Day 4.1: ${calculateScore(boards[firstNewWinner], move)}`);
     break;
   }
 }
