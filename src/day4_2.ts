@@ -93,7 +93,7 @@ for (let move of moves) {
     if (firstNewWinner === -1) {
       throw new Error("Logic error");
     }
-    console.log(`Day 4.1: ${calculateScore(boards[firstNewWinner], move)}`);
+    console.log(`Day 4.2: ${calculateScore(boards[firstNewWinner], move)}`);
     break;
   }
 }
