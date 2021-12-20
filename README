@@ -1,0 +1,5 @@
+# Creating a new day
+
+```
+lein new kata day8
+```
