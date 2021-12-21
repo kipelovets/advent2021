@@ -38,7 +38,15 @@
       (is (= true (low-point? caves [2 2])))
       (is (= true (low-point? caves [4 6]))))))
 
+(def example-caves (parse-input example-input))
 (def real-caves (parse-input (slurp "input")))
+
+(deftest test-low-points-coords
+  (testing "low-points-coords example input"
+    (let [points (low-points-coords example-caves)]
+      (is (=
+           [[0 1] [0 9] [2 2] [4 6]]
+           points)))))
 
 (deftest test-low-points
   (testing "low-points example input"
@@ -62,3 +70,35 @@
     (is (=
          478
          (risk-level (parse-input (slurp "input")))))))
+
+(deftest test-in-flow-ads-coords
+  (testing "in-flow-ads-coords"
+    (is (=
+         [[0 0]]
+         (in-flow-adj-coords example-caves [0 1])))
+    (is (=
+         [[1 0]]
+         (in-flow-adj-coords example-caves [0 0])))
+    (is (=
+         []
+         (in-flow-adj-coords example-caves [1 0])))))
+
+(deftest test-basin-coords
+  (testing "basin-coords"
+    (is (=
+         [[0 1] [0 0] [1 0]]
+         (basin-coords example-caves [0 1])))
+    (is (=
+         [[0 9] [0 8] [1 9] [0 7] [1 8] [2 9] [0 6] [0 5] [1 6]]
+         (basin-coords example-caves [0 9])))))
+
+(deftest test-largest-basins-risk
+  (testing "largest-basins-risk example"
+    (is (=
+         1134
+         (largest-basins-risk example-caves))))
+  (testing "largest-basins-risk real input"
+    (is (=
+         1327014
+         (largest-basins-risk real-caves))))
+  )
