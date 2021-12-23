@@ -12,11 +12,15 @@
 (defn dice-rolls []
   (map #(inc (rem % 100)) (range)))
 
+(defn move-position [pos moves]
+  (let [new-pos-uncut (mod (+ pos moves) 10)
+        new-pos (if (= new-pos-uncut 0) 10 new-pos-uncut)]
+    new-pos))
+
 (defn play [rolls score pos]
   (let [moves (reduce + (take 3 rolls))
         rest-rolls (drop 3 rolls)
-        new-pos-uncut (rem (+ pos moves) 10)
-        new-pos (if (= new-pos-uncut 0) 10 new-pos-uncut)
+        new-pos (move-position pos moves)
         new-score (+ score new-pos)]
     [rest-rolls new-score new-pos]))
 
@@ -34,37 +38,34 @@
   (let [[loser-score rolls-count] (winning-data 0 rolls winning-score [[0 pos1] [0 pos2]])]
     (* loser-score rolls-count)))
 
-(defn winner-from-winning-data [_ rolls-count]
-  (let [rounds-played (/ rolls-count 3)]
-    (if (= 1 (rem rounds-played 2))
-      1
-      2)))
+(defn throw-possibilities []
+  (let [sides (range 1 4)
+        moves (flatten (map (fn [a]
+                              (map (fn [b]
+                                     (map (fn [c]
+                                            (+ a b c))
+                                          sides))
+                                   sides))
+                            sides))
+        moves-counts (reduce (fn [acc el]
+                               (assoc acc el (inc (or (get acc el) 0))))
+                             (cons {} moves))]
+    moves-counts))
 
-(defn winner [rolls pos1 pos2]
-  (let [[_ rolls-count] (winning-data 0 rolls winning-score [[0 pos1] [0 pos2]])]
-    (winner-from-winning-data _ rolls-count)))
+(defn sum-maps [a b]
+  (reduce (fn [acc [key val]]
+            (assoc acc key (+ val (or (get acc key) 0))))
+          (cons a b)))
 
-(defn to-ternary [acc num]
-  (if (= 0 num)
-    acc
-    (to-ternary (cons (rem num 3) acc) (int (/ num 3)))))
+(def all-throws (throw-possibilities))
 
-(defn universe [num]
-  (concat (map inc (to-ternary [] num))
-          (repeat 1)))
-
-(defn universe-winner [seed pos1 pos2]
-  (let [rolls (universe seed)
-        entropy (count (to-ternary [] seed))
-        [_ rolls-count] (winning-data 0 rolls 21 [[0 pos1] [0 pos2]])
-        winner (winner-from-winning-data _ rolls-count)]
-    [winner entropy rolls-count]))
-
-(defn multiverse-winners [pos1 pos2]
-  (let [wins (take-while
-              (fn [[_ entropy rolls-count]] (< (inc entropy) rolls-count))
-              (map #(universe-winner % pos1 pos2) (range)))
-        wins1 (count (filter (fn [[winner]] (= 1 winner)) wins))
-        wins2 (- (count wins) wins1)]
-    (println (last wins))
-    [wins1 wins2]))
+(def count-win
+  (memoize
+   (fn [pos score pos2 score2]
+     (if (>= score2 21)
+       [0 1]
+       (reduce #(mapv + %1 %2)
+               (for [[moves universes] all-throws
+                     :let [new-pos (move-position pos moves)
+                           new-score (+ score new-pos)]]
+                 (reverse (map #(* universes %) (count-win pos2 score2 new-pos new-score)))))))))
