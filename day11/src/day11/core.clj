@@ -74,3 +74,12 @@
       [flashed cavern]
       (let [[new-flashed new-cavern] (simulate-step cavern)]
         (recur new-cavern (inc step) (+ flashed new-flashed))))))
+
+(defn step-when-all-flash [initial-cavern]
+  (let [all-count (* (count initial-cavern) (count (nth initial-cavern 0)))]
+    (loop [cavern initial-cavern
+           step 1]
+      (let [[new-flashed new-cavern] (simulate-step cavern)]
+        (if (= new-flashed all-count)
+          step
+          (recur new-cavern (inc step)))))))

@@ -95,6 +95,7 @@
          [35 step2]
          (simulate-step step1)))))
 
+(def real-data (parse-input (slurp "input")))
 
 (deftest test-simulate-steps
   (testing "example data"
@@ -108,4 +109,15 @@
   (testing "solution part 1"
     (is (=
          1675
-         (first (simulate-steps (parse-input (slurp "input")) 100))))))
+         (first (simulate-steps real-data 100))))))
+
+(deftest test-first-all-flash
+  (testing "example-data"
+    (is (=
+         195
+         (step-when-all-flash step0))))
+
+  (testing "solution part 2"
+    (is (=
+         515
+         (step-when-all-flash real-data)))))
