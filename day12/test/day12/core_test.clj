@@ -69,22 +69,52 @@ start-RW"))
     (is (allowed-step? ["start" "A" "b"] "A"))
     (is (not (allowed-step? ["start" "b" "A"] "b")))))
 
+(def real-input (parse-input (slurp "input")))
+
 (deftest test-paths
   (testing "example data"
     (is (=
          10
-         (count (paths example-data "start" "end")))))
+         (count (paths allowed-step? example-data "start" "end")))))
   (testing "example data 2"
     (is (=
          19
-         (count (paths example-data-2 "start" "end")))))
+         (count (paths allowed-step? example-data-2 "start" "end")))))
   (testing "example data 3"
     (is (=
          226
-         (count (paths example-data-3 "start" "end")))))
+         (count (paths allowed-step? example-data-3 "start" "end")))))
   (testing "solution part 1"
     (is (=
          5252
-         (count (paths (parse-input (slurp "input")) "start" "end")))))
-  )
+         (count (paths allowed-step? real-input "start" "end"))))))
 
+(deftest test-no-duplicate-small-caves
+  (testing "test data"
+    (is (no-duplicate-small-caves? ["start"]))
+    (is (not (no-duplicate-small-caves? ["a" "a"])))))
+
+(deftest test-alowed-step-2
+  (testing "test data"
+    (is (allowed-step-2? ["start"] "A"))
+    (is (not (allowed-step-2? ["start" "A" "a" "a"] "a")))
+    (is (allowed-step-2? ["start" "a" "a"] "b"))
+    (is (not (allowed-step-2? ["start" "a" "a" "b"] "b")))))
+
+(deftest test-paths-part-2
+  (testing "example-data"
+    (is (=
+         36
+         (count (paths allowed-step-2? example-data "start" "end")))))
+  (testing "example-data-2"
+    (is (=
+         103
+         (count (paths allowed-step-2? example-data-2 "start" "end")))))
+  (testing "example-data-3"
+    (is (=
+         3509
+         (count (paths allowed-step-2? example-data-3 "start" "end")))))
+  (testing "solution part 2"
+    (is (=
+         147784
+         (count (paths allowed-step-2? real-input "start" "end"))))))
