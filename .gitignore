@@ -1,8 +1,10 @@
 node_modules
 build
 .vscode/*.log
-*/.clj-kondo
+.lsp
+.clj-kondo
 
+*/.clj-kondo
 */target
 */classes
 */checkouts
