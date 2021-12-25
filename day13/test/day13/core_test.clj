@@ -99,8 +99,20 @@ fold along x=5")
 #####"
            (print-paper (fold folded ["x" 5]))))))
 
-  (testing "real input"
+  (testing "real input - solution part 1"
     (is (=
          693
-         (count (fold points (first folds)))))))
+         (count (fold points (first folds))))))
+
+  (testing "real input - solution part 2"
+    (is (=
+         "#..#..##..#....####.###...##..####.#..#
+#..#.#..#.#.......#.#..#.#..#....#.#..#
+#..#.#....#......#..#..#.#..#...#..#..#
+#..#.#....#.....#...###..####..#...#..#
+#..#.#..#.#....#....#.#..#..#.#....#..#
+.##...##..####.####.#..#.#..#.####..##."
+         (print-paper (reduce (fn [acc el]
+                                (fold acc el))
+                              (cons points folds)))))))
 
