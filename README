@@ -1,5 +1,5 @@
 # Creating a new day
 
 ```
-lein new kata day8
+lein new advent-day day8 --snapshot
 ```
